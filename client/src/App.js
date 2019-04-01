@@ -14,9 +14,9 @@ class App extends Component {
     this.state = {
       vQueries: "",
 
-      nb_sentiment: "",
-      lstm_sentiment: "",
-      svm_sentiment: ""
+      mnb_sentiment: "",
+      svm_sentiment: "",
+      lr_sentiment: ""
     }
 
   }
@@ -43,16 +43,12 @@ class App extends Component {
               <thead>
                 <tr>
                   <th>Naive Bayes</th>
-                  <th>LSTM</th>
                   <th>SVM</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{this.state.nb_sentiment}</td>
-                
-                  <td>{this.state.lstm_sentiment}</td>
-               
+                  <td>{this.state.mnb_sentiment}</td>
                   <td>{this.state.svm_sentiment}</td>
                 </tr>
               </tbody>
@@ -67,7 +63,7 @@ class App extends Component {
               </thead>
               <tbody>
                 <tr>
-                  <td></td>
+                  <td>{this.state.lr_sentiment}</td>
                 </tr>
               </tbody>
             </Table>
@@ -103,9 +99,9 @@ class App extends Component {
         console.log(res.data);
 
         var result = res.data;
-        this.setState({ nb_sentiment: result.nb_sentiment });
-        this.setState({ lstm_sentiment: result.lstm_sentiment });
+        this.setState({ mnb_sentiment: result.mnb_sentiment });
         this.setState({ svm_sentiment: result.svm_sentiment });
+        this.setState({ lr_sentiment: result.lr_sentiment });
       })
       .catch(function (error) {
         console.log('Error getting responses...!!!');
