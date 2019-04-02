@@ -1,4 +1,8 @@
 {
-    "server_ip": "127.0.0.1",
-    "server_port": "5000"
+    "server_details": {
+        "server_ip": "127.0.0.1",
+        "server_port": "5000"
+    },
+    "tweet_limit": "20",
+    "fetch_timeout_seconds": "120"
 }
