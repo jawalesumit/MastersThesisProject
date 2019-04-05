@@ -1,0 +1,5 @@
+flask
+flask_cors
+pandas
+tweepy
+scikit-learn==0.20.1
