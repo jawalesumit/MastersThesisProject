@@ -1,3 +1,4 @@
 *.sav
 *.csv
+*.pyc
 access_keys.json

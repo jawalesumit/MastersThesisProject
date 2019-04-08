@@ -201,7 +201,10 @@ class App extends Component {
   getSentiment() {
 
     API.get('getSentiment', {
-      params: {Queries : this.state.vQueries}
+      params: {
+        Queries : this.state.vQueries,
+        Filename : new Date().getTime()
+      }
     })
       .then(res => {
         console.log('getting responses...');

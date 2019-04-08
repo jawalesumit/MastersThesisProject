@@ -42,21 +42,23 @@ def getSentiment():
         vQueryTerms.append(x.strip())
     print(vQueryTerms)
 
-    #vQueries = vQueries.lower()
-    QUERY_FILENAME = "my_tempFile.csv"
+    vFilename = request.args.get("Filename")
+    vFilename = str(vFilename) + ".csv"
+    print(vFilename)
 
-    f = open(os.path.join(tmpFilePath, QUERY_FILENAME), 'w')
+    f = open(os.path.join(tmpFilePath, vFilename), 'w')
     f.close()
 
     print('fetching tweets...')
-    ft.streamTweets(vQueryTerms, QUERY_FILENAME)
+    ft.streamTweets(vQueryTerms, vFilename)
     print('all tweets fetched!!!')
-    df = pd.read_csv(os.path.join(tmpFilePath, QUERY_FILENAME), header=None)
+    df = pd.read_csv(os.path.join(tmpFilePath, vFilename), header=None)
     print(len(df.index))
-   
+
     print("analyzing sentiment...")
 
-    mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df)
+    mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(
+        df)
 
     msg = {
         'mnb_positive': mnb_positive,
@@ -66,6 +68,9 @@ def getSentiment():
         'lr_positive': lr_positive,
         'lr_negative': lr_negative
     }
+
+    print('removing file : ' + str(vFilename))
+    os.remove(os.path.join(tmpFilePath, vFilename))
 
     return jsonify(msg)
 

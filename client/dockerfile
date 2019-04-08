@@ -4,5 +4,6 @@ FROM node:10.3
 # Copy any files from your local to the image.
 COPY . .
 
-EXPOSE 3000
+#open port in virtual-box when running on windows
+EXPOSE 3000 
 CMD [ "npm", "start" ]
