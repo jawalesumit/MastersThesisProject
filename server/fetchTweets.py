@@ -7,8 +7,8 @@ from tweepy import OAuthHandler
 import os
 from datetime import datetime
 
-# filenames
-stopwordsFile = "StopWords.txt"
+QUOTECHAR = '~'
+DELIMITER = '|'
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 filePath = os.path.join(THIS_FOLDER, 'files')
@@ -32,50 +32,6 @@ access_token_secret = configKeysData["access_token_secret"]
 TWEET_LIMIT = configData["tweet_limit"]
 TIME_OUT_SECONDS = configData["fetch_timeout_seconds"]
 
-print('create stopwords list')
-stopwords_list = []
-fp = open(os.path.join(filePath, stopwordsFile), 'r')
-line = fp.readline()
-while line:
-    word = line.strip()
-    stopwords_list.append(word)
-    line = fp.readline()
-fp.close()
-
-
-def processText(txt_input):
-    # Convert into lowercase
-    Tweet = txt_input.lower()
-
-    # Convert www.* or https?://* to ''
-    Tweet = re.sub('((www\.[\s]+)|(https?://[^\s]+))', '', Tweet)
-
-    # Convert @username to ''
-    Tweet = re.sub('@[^\s]+', '', Tweet)
-
-    # Replace #word with word Handling hashtags
-    Tweet = re.sub(r'#([^\s]+)', r'\1', Tweet)
-
-    # Deleting the Twitter reTweets
-    rt = 'rt'
-    Tweet = Tweet.replace(rt, '')
-
-    legal = set(' abcdefghijklmnopqrstuvwxyz')
-    Tweet = "".join(char if char in legal else '' for char in Tweet)
-
-    Tweet = Tweet.strip()
-
-    Tweet = " ".join(Tweet.split())
-
-    tweet_without_stopwords = ''
-    for x in Tweet.split(' '):
-        if x in stopwords_list:
-            continue
-        else:
-            tweet_without_stopwords = tweet_without_stopwords + x + ' '
-
-    return tweet_without_stopwords
-
 
 class CustomStreamListener(tweepy.StreamListener):
     def __init__(self, api=None, filename='tempFile.txt'):
@@ -88,17 +44,14 @@ class CustomStreamListener(tweepy.StreamListener):
         try:
             name = status.author.screen_name
             textTwitter = status.text
+            textTwitter = textTwitter.replace('\n', ' ').replace('\r', '')
 
-            Tweet = processText(textTwitter)
-
-            if Tweet == '':
-                return True
-
-            final_tweet = Tweet
+            data_entry = QUOTECHAR + name + QUOTECHAR + DELIMITER + QUOTECHAR + \
+                textTwitter + QUOTECHAR + DELIMITER + QUOTECHAR + textTwitter + QUOTECHAR
 
             f = open(os.path.join(tmpFilePath, self.filename), 'r+')
             old = f.read()
-            f.write(final_tweet+'\n')
+            f.write(data_entry+'\n')
             f.close()
             
             self.n = self.n+1
@@ -130,12 +83,5 @@ def streamTweets(vQueries, vFilename):
         auth, CustomStreamListener(filename=vFilename))
 
     setTerms = vQueries
-    """
-    if(sentiment == POSITIVE_SENTIMENT):
-        setTerms = ['positive', 'happy', 'fun', 'great',
-                    'love', 'good', 'not sad', 'not bad']
-    else:
-        setTerms = ['negative', 'sad', 'bad', 'worst', 'hate',
-                    'fail', 'not happy', 'not good']
-    """
+    
     TweetsData.filter(None, setTerms, languages=["en"])

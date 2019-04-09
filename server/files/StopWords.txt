@@ -1,5 +1,5 @@
-TWITTER_USER
-URL
+twitter_user
+url
 rt
 a
 about

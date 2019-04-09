@@ -6,7 +6,11 @@ import json
 import pandas as pd
 
 import fetchTweets as ft
+import processTweets as pt
 import sentimentAnalysis as sa
+
+QUOTECHAR = '~'
+DELIMITER = '|'
 
 app = Flask(__name__)
 CORS(app)
@@ -52,13 +56,18 @@ def getSentiment():
     print('fetching tweets...')
     ft.streamTweets(vQueryTerms, vFilename)
     print('all tweets fetched!!!')
-    df = pd.read_csv(os.path.join(tmpFilePath, vFilename), header=None)
+
+    print('processing tweets...')
+    pt.processTweets(vFilename)
+    print('all tweets processed!!!')
+
+    df = pd.read_csv(os.path.join(tmpFilePath, vFilename), encoding="Windows-1252", header=None, delimiter=DELIMITER, quotechar=QUOTECHAR)
     print(len(df.index))
 
     print("analyzing sentiment...")
 
     mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(
-        df)
+        df[2])
 
     msg = {
         'mnb_positive': mnb_positive,

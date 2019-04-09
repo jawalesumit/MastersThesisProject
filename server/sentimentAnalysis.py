@@ -39,7 +39,7 @@ print('All models loaded!')
 
 
 def analyzeSentiment(vQueries):
-    vQueries = vQueries[0].astype(str)
+    #vQueries = vQueries[0].astype(str)
 
     vector = CountVectorizer_svm.transform(vQueries)
     svm_pred = svm_model.predict(vector)
