@@ -68,6 +68,6 @@ def processTweets(tweetFile):
     # remove blank rows
     df = df[df[2] != '']
 
-    print(df)
+    #print(df)
 
-    df.to_csv(os.path.join(tmpFilePath, tweetFile), sep=DELIMITER, quotechar=QUOTECHAR, index=False, header=False)
+    df.to_csv(os.path.join(tmpFilePath, tweetFile), encoding="Windows-1252", sep=DELIMITER, quotechar=QUOTECHAR, index=False, header=False)

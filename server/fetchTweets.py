@@ -44,7 +44,7 @@ class CustomStreamListener(tweepy.StreamListener):
         try:
             name = status.author.screen_name
             textTwitter = status.text
-            textTwitter = textTwitter.replace('\n', ' ').replace('\r', '')
+            #textTwitter = textTwitter.replace('\n', ' ').replace('\r', '')
 
             data_entry = QUOTECHAR + name + QUOTECHAR + DELIMITER + QUOTECHAR + \
                 textTwitter + QUOTECHAR + DELIMITER + QUOTECHAR + textTwitter + QUOTECHAR

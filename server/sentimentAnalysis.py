@@ -38,36 +38,18 @@ print('All models loaded!')
 # ---------------analyze sentiment---------------
 
 
-def analyzeSentiment(vQueries):
-    #vQueries = vQueries[0].astype(str)
-
-    vector = CountVectorizer_svm.transform(vQueries)
+def analyzeSentiment(df):
+    
+    vector = CountVectorizer_svm.transform(df[2])
     svm_pred = svm_model.predict(vector)
 
     vector = TfidfTransformer_mnb.transform(
-        CountVectorizer_mnb.transform(vQueries))
+        CountVectorizer_mnb.transform(df[2]))
     mnb_pred = mnb_model.predict(vector)
 
-    df = pd.concat([pd.DataFrame(svm_pred), pd.DataFrame(mnb_pred)], axis=1)
+    lr_df = pd.concat([pd.DataFrame(svm_pred), pd.DataFrame(mnb_pred)], axis=1)
 
-    lr_pred = lr_meta_model.predict(df)
-
-    """
-    if(lr_pred == [4]):
-        lr_pred = 'positive'
-    else:
-        lr_pred = 'negative'
-
-    if(svm_pred == [4]):
-        svm_pred = 'positive'
-    else:
-        svm_pred = 'negative'
-
-    if(mnb_pred == [4]):
-        mnb_pred = 'positive'
-    else:
-        mnb_pred = 'negative'
-    """
+    lr_pred = lr_meta_model.predict(lr_df)
 
     counter1 = collections.Counter(mnb_pred)
     mnb_positive = counter1[4]

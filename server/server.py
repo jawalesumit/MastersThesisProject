@@ -66,8 +66,9 @@ def getSentiment():
 
     print("analyzing sentiment...")
 
-    mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(
-        df[2])
+    #mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df[2])
+
+    mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df)
 
     msg = {
         'mnb_positive': mnb_positive,
