@@ -212,14 +212,14 @@ class App extends Component {
         console.log(res.data);
 
         var result = res.data;
-        this.setState({ mnb_sentiment_positive: result.mnb_positive });
-        this.setState({ mnb_sentiment_negative: result.mnb_negative });
+        this.setState({ mnb_sentiment_positive: result.mnb_pos_count });
+        this.setState({ mnb_sentiment_negative: result.mnb_neg_count });
 
-        this.setState({ svm_sentiment_positive: result.svm_positive });
-        this.setState({ svm_sentiment_negative: result.svm_negative });
+        this.setState({ svm_sentiment_positive: result.svm_pos_count });
+        this.setState({ svm_sentiment_negative: result.svm_neg_count });
 
-        this.setState({ lr_sentiment_positive: result.lr_positive });
-        this.setState({ lr_sentiment_negative: result.lr_negative });
+        this.setState({ lr_sentiment_positive: result.lr_pos_count });
+        this.setState({ lr_sentiment_negative: result.lr_neg_count });
 
         var toDisplay_mnb = "";
         var toDisplay_svm = "";
@@ -231,17 +231,17 @@ class App extends Component {
         }
         else {
           var vTmpObj = this.state.sentimentChart_MNB;
-          vTmpObj.datasets[0].data = [result.mnb_positive, result.mnb_negative];
+          vTmpObj.datasets[0].data = [result.mnb_pos_count, result.mnb_neg_count];
           this.setState({ sentimentChart_MNB: vTmpObj });
           toDisplay_mnb = <Doughnut width={250} data={this.state.sentimentChart_MNB} legend={{ display: true }} redraw />;
 
           vTmpObj = this.state.sentimentChart_SVM;
-          vTmpObj.datasets[0].data = [result.svm_positive, result.svm_negative];
+          vTmpObj.datasets[0].data = [result.svm_pos_count, result.svm_neg_count];
           this.setState({ sentimentChart_SVM: vTmpObj });
           toDisplay_svm = <Doughnut width={250} data={this.state.sentimentChart_SVM} legend={{ display: true }} redraw />;
 
           vTmpObj = this.state.sentimentChart_LR;
-          vTmpObj.datasets[0].data = [result.lr_positive, result.lr_negative];
+          vTmpObj.datasets[0].data = [result.lr_pos_count, result.lr_neg_count];
           this.setState({ sentimentChart_LR: vTmpObj });
           toDisplay_lr = <Doughnut width={250} data={this.state.sentimentChart_LR} legend={{ display: true }} redraw />;
         }

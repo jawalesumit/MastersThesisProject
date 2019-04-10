@@ -1,4 +1,6 @@
 *.sav
 *.csv
 *.pyc
+*.zip
+__pycache__
 access_keys.json

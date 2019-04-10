@@ -73,12 +73,14 @@ def getSentiment():
     print(df)
 
     msg = {
-        'mnb_positive': int((df[4] == 4).sum()),
-        'mnb_negative': int((df[4] == 0).sum()),
-        'svm_positive': int((df[3] == 4).sum()),
-        'svm_negative': int((df[3] == 0).sum()),
-        'lr_positive': int((df[5] == 4).sum()),
-        'lr_negative': int((df[5] == 0).sum())
+        'mnb_pos_count': int((df[4] == 4).sum()),
+        'mnb_neg_count': int((df[4] == 0).sum()),
+
+        'svm_pos_count': int((df[3] == 4).sum()),
+        'svm_neg_count': int((df[3] == 0).sum()),
+
+        'lr_pos_count': int((df[5] == 4).sum()),
+        'lr_neg_count': int((df[5] == 0).sum())
     }
 
     print('removing file : ' + str(vFilename))
