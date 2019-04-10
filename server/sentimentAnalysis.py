@@ -1,9 +1,7 @@
 import sys
 import os
 import pickle
-import re
 import pandas as pd
-import collections
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 modelsPath = os.path.join(THIS_FOLDER, 'savedModels')
@@ -39,7 +37,7 @@ print('All models loaded!')
 
 
 def analyzeSentiment(df):
-    
+
     vector = CountVectorizer_svm.transform(df[2])
     svm_pred = svm_model.predict(vector)
 
@@ -47,20 +45,10 @@ def analyzeSentiment(df):
         CountVectorizer_mnb.transform(df[2]))
     mnb_pred = mnb_model.predict(vector)
 
-    lr_df = pd.concat([pd.DataFrame(svm_pred), pd.DataFrame(mnb_pred)], axis=1)
+    svm_mnb_df = pd.concat([pd.DataFrame(svm_pred), pd.DataFrame(mnb_pred)], axis=1)
 
-    lr_pred = lr_meta_model.predict(lr_df)
+    lr_pred = lr_meta_model.predict(svm_mnb_df)
 
-    counter1 = collections.Counter(mnb_pred)
-    mnb_positive = counter1[4]
-    mnb_negative = counter1[0]
+    df = pd.concat([df, svm_mnb_df, pd.DataFrame(lr_pred)], axis=1, ignore_index=True)
 
-    counter1 = collections.Counter(svm_pred)
-    svm_positive = counter1[4]
-    svm_negative = counter1[0]
-
-    counter1 = collections.Counter(lr_pred)
-    lr_positive = counter1[4]
-    lr_negative = counter1[0]
-
-    return mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative
+    return df

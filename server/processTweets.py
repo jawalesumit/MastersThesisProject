@@ -1,6 +1,4 @@
 import sys
-import re
-import json
 import os
 import pandas as pd
 
@@ -24,6 +22,7 @@ while line:
     stopwords_list.append(word)
     line = fp.readline()
 fp.close()
+
 
 def processTweets(tweetFile):
     df = pd.read_csv(os.path.join(
@@ -68,6 +67,7 @@ def processTweets(tweetFile):
     # remove blank rows
     df = df[df[2] != '']
 
-    #print(df)
+    # print(df)
 
-    df.to_csv(os.path.join(tmpFilePath, tweetFile), encoding="Windows-1252", sep=DELIMITER, quotechar=QUOTECHAR, index=False, header=False)
+    df.to_csv(os.path.join(tmpFilePath, tweetFile), encoding="Windows-1252",
+              sep=DELIMITER, quotechar=QUOTECHAR, index=False, header=False)

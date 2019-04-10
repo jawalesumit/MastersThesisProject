@@ -1,11 +1,10 @@
 import sys
 import tweepy
-import re
 import json
-from tweepy.streaming import StreamListener
-from tweepy import OAuthHandler
 import os
 from datetime import datetime
+from tweepy.streaming import StreamListener
+from tweepy import OAuthHandler
 
 QUOTECHAR = '~'
 DELIMITER = '|'
@@ -53,10 +52,10 @@ class CustomStreamListener(tweepy.StreamListener):
             old = f.read()
             f.write(data_entry+'\n')
             f.close()
-            
+
             self.n = self.n+1
             timediff = datetime.now() - self.starttime
-            if ( self.n < int(TWEET_LIMIT) ) and ( timediff.seconds < int(TIME_OUT_SECONDS) ):
+            if (self.n < int(TWEET_LIMIT)) and (timediff.seconds < int(TIME_OUT_SECONDS)):
                 return True
             else:
                 print('maxnum = '+str(self.n))
@@ -83,5 +82,5 @@ def streamTweets(vQueries, vFilename):
         auth, CustomStreamListener(filename=vFilename))
 
     setTerms = vQueries
-    
+
     TweetsData.filter(None, setTerms, languages=["en"])

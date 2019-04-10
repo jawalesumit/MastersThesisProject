@@ -68,15 +68,17 @@ def getSentiment():
 
     #mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df[2])
 
-    mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df)
+    df = sa.analyzeSentiment(df)
+
+    print(df)
 
     msg = {
-        'mnb_positive': mnb_positive,
-        'mnb_negative': mnb_negative,
-        'svm_positive': svm_positive,
-        'svm_negative': svm_negative,
-        'lr_positive': lr_positive,
-        'lr_negative': lr_negative
+        'mnb_positive': int((df[4] == 4).sum()),
+        'mnb_negative': int((df[4] == 0).sum()),
+        'svm_positive': int((df[3] == 4).sum()),
+        'svm_negative': int((df[3] == 0).sum()),
+        'lr_positive': int((df[5] == 4).sum()),
+        'lr_negative': int((df[5] == 0).sum())
     }
 
     print('removing file : ' + str(vFilename))
