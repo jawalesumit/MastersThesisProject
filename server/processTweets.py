@@ -2,9 +2,6 @@ import sys
 import os
 import pandas as pd
 
-QUOTECHAR = '~'
-DELIMITER = '|'
-
 # filenames
 stopwordsFile = "StopWords.txt"
 
@@ -25,8 +22,7 @@ fp.close()
 
 
 def processTweets(tweetFile):
-    df = pd.read_csv(os.path.join(
-        tmpFilePath, tweetFile), encoding="Windows-1252", header=None, delimiter=DELIMITER, quotechar=QUOTECHAR)
+    df = pd.read_csv(os.path.join(tmpFilePath, tweetFile), header=None)
 
     print(len(df.index))
 
@@ -69,5 +65,4 @@ def processTweets(tweetFile):
 
     # print(df)
 
-    df.to_csv(os.path.join(tmpFilePath, tweetFile), encoding="Windows-1252",
-              sep=DELIMITER, quotechar=QUOTECHAR, index=False, header=False)
+    df.to_csv(os.path.join(tmpFilePath, tweetFile), index=False, header=False)

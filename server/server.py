@@ -9,8 +9,6 @@ import fetchTweets as ft
 import processTweets as pt
 import sentimentAnalysis as sa
 
-QUOTECHAR = '~'
-DELIMITER = '|'
 
 app = Flask(__name__)
 CORS(app)
@@ -50,9 +48,6 @@ def getSentiment():
     vFilename = str(vFilename) + ".csv"
     print(vFilename)
 
-    f = open(os.path.join(tmpFilePath, vFilename), 'w')
-    f.close()
-
     print('fetching tweets...')
     ft.streamTweets(vQueryTerms, vFilename)
     print('all tweets fetched!!!')
@@ -61,26 +56,25 @@ def getSentiment():
     pt.processTweets(vFilename)
     print('all tweets processed!!!')
 
-    df = pd.read_csv(os.path.join(tmpFilePath, vFilename), encoding="Windows-1252", header=None, delimiter=DELIMITER, quotechar=QUOTECHAR)
-    print(len(df.index))
+    df = pd.read_csv(os.path.join(tmpFilePath, vFilename), header=None)
 
     print("analyzing sentiment...")
-
-    #mnb_positive, mnb_negative, svm_positive, svm_negative, lr_positive, lr_negative = sa.analyzeSentiment(df[2])
-
     df = sa.analyzeSentiment(df)
 
-    print(df)
+    # print(df)
 
     msg = {
         'mnb_pos_count': int((df[4] == 4).sum()),
         'mnb_neg_count': int((df[4] == 0).sum()),
+        'mnb_tweets': (df.groupby([4], as_index=True).apply(lambda x: x[[0, 1]].to_dict('r')).reset_index().rename(columns={0: 'Data'}).to_json(orient='records')),
 
         'svm_pos_count': int((df[3] == 4).sum()),
         'svm_neg_count': int((df[3] == 0).sum()),
+        'svm_tweets': (df.groupby([3], as_index=True).apply(lambda x: x[[0, 1]].to_dict('r')).reset_index().rename(columns={0: 'Data'}).to_json(orient='records')),
 
         'lr_pos_count': int((df[5] == 4).sum()),
-        'lr_neg_count': int((df[5] == 0).sum())
+        'lr_neg_count': int((df[5] == 0).sum()),
+        'lr_tweets': (df.groupby([5], as_index=True).apply(lambda x: x[[0, 1]].to_dict('r')).reset_index().rename(columns={0: 'Data'}).to_json(orient='records'))
     }
 
     print('removing file : ' + str(vFilename))

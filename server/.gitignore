@@ -3,4 +3,5 @@
 *.pyc
 *.zip
 __pycache__
+tempFiles
 access_keys.json

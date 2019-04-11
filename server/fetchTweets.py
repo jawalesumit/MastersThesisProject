@@ -2,12 +2,10 @@ import sys
 import tweepy
 import json
 import os
+import pandas as pd
 from datetime import datetime
 from tweepy.streaming import StreamListener
 from tweepy import OAuthHandler
-
-QUOTECHAR = '~'
-DELIMITER = '|'
 
 THIS_FOLDER = os.path.dirname(os.path.abspath(__file__))
 filePath = os.path.join(THIS_FOLDER, 'files')
@@ -37,27 +35,28 @@ class CustomStreamListener(tweepy.StreamListener):
         self.n = 0
         self.api = api
         self.filename = filename
+        self.dataList = []
         self.starttime = datetime.now()
 
     def on_status(self, status):
         try:
             name = status.author.screen_name
             textTwitter = status.text
-            #textTwitter = textTwitter.replace('\n', ' ').replace('\r', '')
 
-            data_entry = QUOTECHAR + name + QUOTECHAR + DELIMITER + QUOTECHAR + \
-                textTwitter + QUOTECHAR + DELIMITER + QUOTECHAR + textTwitter + QUOTECHAR
+            # print(name)
+            # print(textTwitter)
+            # print('\n')
 
-            f = open(os.path.join(tmpFilePath, self.filename), 'r+')
-            old = f.read()
-            f.write(data_entry+'\n')
-            f.close()
+            self.dataList.append((name, textTwitter, textTwitter))
 
             self.n = self.n+1
             timediff = datetime.now() - self.starttime
             if (self.n < int(TWEET_LIMIT)) and (timediff.seconds < int(TIME_OUT_SECONDS)):
                 return True
             else:
+                df = pd.DataFrame.from_records(self.dataList)
+                df.to_csv(os.path.join(tmpFilePath, self.filename),
+                          index=False, header=False)
                 print('maxnum = '+str(self.n))
                 return False
 
