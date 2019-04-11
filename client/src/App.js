@@ -280,7 +280,7 @@ class App extends Component {
     })
       .then(res => {
         console.log('getting responses...');
-        console.log(res);
+        //console.log(res);
         console.log(res.data);
         var result = res.data;
 

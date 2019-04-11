@@ -41,7 +41,8 @@ class CustomStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         try:
             name = status.author.screen_name
-            textTwitter = status.text
+            #textTwitter = status.text
+            textTwitter = status._json["extended_tweet"]["full_text"]
 
             # print(name)
             # print(textTwitter)
