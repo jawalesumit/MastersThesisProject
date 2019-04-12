@@ -1,7 +1,7 @@
-import axios from 'axios';
-import axiosRetry from 'axios-retry';
+import axios from "axios";
+import axiosRetry from "axios-retry";
 
-var config = require('./server_config.json');
+var config = require("./server_config.json");
 var vURL = "http://" + config.server_ip + ":" + config.server_port + "/";
 
 const server = axios.create({ baseURL: vURL });
