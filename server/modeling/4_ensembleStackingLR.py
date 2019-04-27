@@ -21,6 +21,19 @@ modelsPath = os.path.join(sys.path[0], '..\\savedModels')
 
 starttime = datetime.now()
 
+
+filename = 'CountVectorizer_svm.sav'
+CountVectorizer_svm = pickle.load(
+    open(os.path.join(modelsPath, filename), 'rb'))
+
+filename = 'CountVectorizer_mNB.sav'
+CountVectorizer_mnb = pickle.load(
+    open(os.path.join(modelsPath, filename), 'rb'))
+
+filename = 'TfidfTransformer_mNB.sav'
+TfidfTransformer = pickle.load(open(os.path.join(modelsPath, filename), 'rb'))
+
+
 ########## Read and create test, train data - start ##########
 print('reading processed tweets...')
 data = pd.read_csv(os.path.join(filePath, TweetFile), sep='\t')
@@ -79,10 +92,6 @@ def Stacking(model_name, model, X_train1, y_train1, n_fold, y_val_flag, y_val_pr
 ############################ SVM Base Model - START ##############################
 print('\nbase model - SVM')
 
-filename = 'CountVectorizer_svm.sav'
-CountVectorizer_svm = pickle.load(
-    open(os.path.join(modelsPath, filename), 'rb'))
-
 model_svm = LinearSVC(C=0.01, max_iter=X_test.size)
 
 print('stacking svm...')
@@ -100,13 +109,6 @@ test_pred_svm = pd.DataFrame(test_pred_svm)
 
 ############################ Multinomial NB Base Model - START ##############################
 print('\nbase model - mnb')
-
-filename = 'CountVectorizer_mNB.sav'
-CountVectorizer_mnb = pickle.load(
-    open(os.path.join(modelsPath, filename), 'rb'))
-
-filename = 'TfidfTransformer_mNB.sav'
-TfidfTransformer = pickle.load(open(os.path.join(modelsPath, filename), 'rb'))
 
 model_mnb = MultinomialNB(alpha=1, class_prior=None, fit_prior=True)
 
