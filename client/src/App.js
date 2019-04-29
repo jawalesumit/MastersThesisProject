@@ -48,6 +48,8 @@ class App extends Component {
       analyzeDisabled: false,
 
       vQueries: "",
+      vTweetsCount: "20",
+      vTimeout: "2",
 
       mnb_sentiment_positive: 0,
       mnb_sentiment_negative: 0,
@@ -123,18 +125,54 @@ class App extends Component {
       <div className="App">
         <Container>
           <Row className="show-grid justify-content-center">
-            <Form inline>
-              <Form.Group as={Row} controlId="form">
-                <Col sm={10} xs={"auto"}>
-                  <Form.Control
-                    type="text"
-                    placeholder="Type a query(s) or keyword(s). Please use semicolon(;) as seperator. Eg: batman, nolan movie"
-                    value={this.state.vQueries}
-                    onChange={e => this.changeQuery(e)}
-                    style={{ width: "45em" }}
-                  />
+            <Form controlId="form">
+              <Form.Row>
+                <Col>
+                  <Form.Group as={Col} controlId="formGridState">
+                    <Form.Label>Query</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Type a query(s) or keyword(s). Please use semicolon(;) as seperator. Eg: batman, nolan movie"
+                      value={this.state.vQueries}
+                      onChange={e => this.changeQuery(e, "vQueries")}
+                      style={{ width: "45em" }}
+                    />
+                  </Form.Group>
                 </Col>
-                <Col sm={2} xs={"auto"}>
+              </Form.Row>
+              <Form.Row>
+                <Col>
+                  <Form.Group as={Col} controlId="formGridState">
+                    <Form.Label># of Tweets to analyse</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={this.state.vTweetsCount}
+                      onChange={e => this.changeQuery(e, "vTweetsCount")}
+                    >
+                      <option>10</option>
+                      <option>20</option>
+                      <option>50</option>
+                      <option>100</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+                <Col>
+                  <Form.Group as={Col} controlId="formGridState">
+                    <Form.Label>Timeout (minutes)</Form.Label>
+                    <Form.Control
+                      as="select"
+                      value={this.state.vTimeout}
+                      onChange={e => this.changeQuery(e, "vTimeout")}
+                    >
+                      <option>1</option>
+                      <option>2</option>
+                      <option>5</option>
+                    </Form.Control>
+                  </Form.Group>
+                </Col>
+              </Form.Row>
+              <Form.Row>
+                <Col sm={{ span: 12 }}>
                   <Button
                     style={{ margin: "0.2em" }}
                     variant="primary"
@@ -146,17 +184,17 @@ class App extends Component {
                     {!this.state.isLoading ? (
                       "Analyse"
                     ) : (
-                        <Spinner
-                          as="span"
-                          animation="border"
-                          size="sm"
-                          role="status"
-                          aria-hidden="true"
-                        />
-                      )}
+                      <Spinner
+                        as="span"
+                        animation="border"
+                        size="sm"
+                        role="status"
+                        aria-hidden="true"
+                      />
+                    )}
                   </Button>
                 </Col>
-              </Form.Group>
+              </Form.Row>
             </Form>
           </Row>
           <Row className="show-grid justify-content-center">
@@ -198,39 +236,20 @@ class App extends Component {
             <Table responsive striped bordered>
               <thead>
                 <tr>
-                  <th style={{ width: "50%" }}>Naive Bayes</th>
-                  <th style={{ width: "50%" }}>SVM</th>
+                  <th style={{ width: "30%" }}>Naive Bayes</th>
+                  <th style={{ width: "30%" }}>SVM</th>
+                  <th style={{ width: "40%" }}>Ensemble Stacking - LR</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td style={{ width: "50%" }}>Accuracy: 78.24%</td>
-                  <td style={{ width: "50%" }}>Accuracy: 78.02%</td>
-                </tr>
-                <tr>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "30%" }}>
                     <div id="SentimentChart_MNB" />
                   </td>
-                  <td style={{ width: "50%" }}>
+                  <td style={{ width: "30%" }}>
                     <div id="SentimentChart_SVM" />
                   </td>
-                </tr>
-              </tbody>
-            </Table>
-          </Row>
-          <Row className="show-grid justify-content-md-center">
-            <Table responsive striped bordered>
-              <thead>
-                <tr>
-                  <th>Ensemble Approach</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Accuracy: 78.61%</td>
-                </tr>
-                <tr>
-                  <td>
+                  <td style={{ width: "40%" }}>
                     <div id="SentimentChart_LR" />
                   </td>
                 </tr>
@@ -272,8 +291,11 @@ class App extends Component {
 
   // functions
 
-  changeQuery(e) {
-    this.setState({ vQueries: e.target.value });
+  changeQuery(e, input) {
+    if (input === "vQueries") this.setState({ vQueries: e.target.value });
+    else if (input === "vTweetsCount")
+      this.setState({ vTweetsCount: e.target.value });
+    else if (input === "vTimeout") this.setState({ vTimeout: e.target.value });
     this.setState({ analyzeDisabled: false });
   }
 
@@ -336,6 +358,8 @@ class App extends Component {
     API.get("getSentiment", {
       params: {
         Queries: this.state.vQueries,
+        TweetCount: this.state.vTweetsCount,
+        Timeout: this.state.vTimeout,
         Filename: new Date().getTime()
       }
     })
@@ -493,7 +517,7 @@ class App extends Component {
         this.setState({ showFetchAlert: false });
         this.setState({ showSuccessInputAlert: true });
       })
-      .catch(function (error) {
+      .catch(function(error) {
         console.log("Error getting responses...!!!");
         console.log(error);
       });

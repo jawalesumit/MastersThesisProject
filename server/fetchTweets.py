@@ -29,30 +29,26 @@ access_token_secret = configKeysData["access_token_secret"]
 TWEET_LIMIT = configData["tweet_limit"]
 TIME_OUT_SECONDS = configData["fetch_timeout_seconds"]
 
-
 class CustomStreamListener(tweepy.StreamListener):
-    def __init__(self, api=None, filename='tempFile.txt'):
+    def __init__(self, api=None, filename='tempFile.txt', tweet_limit=TWEET_LIMIT, time_out=TIME_OUT_SECONDS):
         self.n = 0
         self.api = api
         self.filename = filename
         self.dataList = []
+        self.tweet_limit = tweet_limit
+        self.time_out = time_out
         self.starttime = datetime.now()
 
     def on_status(self, status):
         try:
             name = status.author.screen_name
-            #textTwitter = status.text
             textTwitter = status._json["extended_tweet"]["full_text"]
-
-            # print(name)
-            # print(textTwitter)
-            # print('\n')
 
             self.dataList.append((name, textTwitter, textTwitter))
 
             self.n = self.n+1
             timediff = datetime.now() - self.starttime
-            if (self.n < int(TWEET_LIMIT)) and (timediff.seconds < int(TIME_OUT_SECONDS)):
+            if (self.n < int(self.tweet_limit)) and (timediff.seconds < int(self.time_out)):
                 return True
             else:
                 df = pd.DataFrame.from_records(self.dataList)
@@ -73,13 +69,15 @@ class CustomStreamListener(tweepy.StreamListener):
         return True  # Don't kill the stream
 
 
-def streamTweets(vQueries, vFilename):
+def streamTweets(vQueries, vFilename, vTweetCount, vTimeout):
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth)
 
+    vTimeout = int(vTimeout) * 60
+
     TweetsData = tweepy.streaming.Stream(
-        auth, CustomStreamListener(filename=vFilename))
+        auth, CustomStreamListener(filename=vFilename, tweet_limit=vTweetCount, time_out=vTimeout))
 
     setTerms = vQueries
 

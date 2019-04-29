@@ -44,12 +44,18 @@ def getSentiment():
         vQueryTerms.append(x.strip())
     print(vQueryTerms)
 
+    vTweetCount = request.args.get("TweetCount")
+    print(vTweetCount)
+
+    vTimeout = request.args.get("Timeout")
+    print(vTimeout)
+
     vFilename = request.args.get("Filename")
     vFilename = str(vFilename) + ".csv"
     print(vFilename)
 
     print('fetching tweets...')
-    ft.streamTweets(vQueryTerms, vFilename)
+    ft.streamTweets(vQueryTerms, vFilename, vTweetCount, vTimeout)
     print('all tweets fetched!!!')
 
     print('processing tweets...')
