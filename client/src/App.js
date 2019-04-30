@@ -292,11 +292,13 @@ class App extends Component {
   // functions
 
   changeQuery(e, input) {
-    if (input === "vQueries") this.setState({ vQueries: e.target.value });
-    else if (input === "vTweetsCount")
-      this.setState({ vTweetsCount: e.target.value });
-    else if (input === "vTimeout") this.setState({ vTimeout: e.target.value });
-    this.setState({ analyzeDisabled: false });
+    if(!this.state.isLoading){
+      if (input === "vQueries") this.setState({ vQueries: e.target.value });
+      else if (input === "vTweetsCount")
+        this.setState({ vTweetsCount: e.target.value });
+      else if (input === "vTimeout") this.setState({ vTimeout: e.target.value });
+      this.setState({ analyzeDisabled: false });
+    }
   }
 
   analyseQueries(event) {
