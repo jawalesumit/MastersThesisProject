@@ -45,10 +45,10 @@ def processText(txt_input):
     Tweet = txt_input.lower()
 
     # Convert www.* or https?://* to ''
-    Tweet = re.sub('((www\.[\s]+)|(https?://[^\s]+))', '', Tweet)
+    Tweet = re.sub(r'((www\.[\s]+)|(https?://[^\s]+))', '', Tweet)
 
     # Convert @username to ''
-    Tweet = re.sub('@[^\s]+', '', Tweet)
+    Tweet = re.sub(r'@[^\s]+', '', Tweet)
 
     # Replace #word with word Handling hashtags
     Tweet = re.sub(r'#([^\s]+)', r'\1', Tweet)
